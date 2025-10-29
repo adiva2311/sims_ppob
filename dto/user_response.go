@@ -9,8 +9,8 @@ type RegisterResponse struct {
 	ProfileImage string `json:"profile_image"`
 }
 
-func ToUserResponse(user *models.User) *RegisterResponse {
-	return &RegisterResponse{
+func ToUserResponse(user models.User) RegisterResponse {
+	return RegisterResponse{
 		Email:        user.Email,
 		FirstName:    user.FirstName,
 		LastName:     user.LastName,

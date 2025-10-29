@@ -3,12 +3,12 @@ package services
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"sims_ppob/dto"
 	"sims_ppob/models"
 	"sims_ppob/repositories"
 	"sims_ppob/utils"
-
-	"github.com/go-playground/validator/v10"
+	"strings"
 )
 
 type UserService interface {
@@ -21,14 +21,17 @@ type UserService interface {
 
 type UserServiceImpl struct {
 	userRepository repositories.UserRepository
-	validate       *validator.Validate
+	// validate       *validator.Validate
 }
 
 // Register implements UserService.
 func (u *UserServiceImpl) Register(registerRequest models.User) (dto.RegisterResponse, error) {
 	// Check if email already exists
-	exists, _ := u.userRepository.CheckEmailExists(registerRequest.Email)
-	if !exists {
+	exists, err := u.userRepository.CheckEmailExists(registerRequest.Email)
+	if err != nil {
+		return dto.RegisterResponse{}, errors.New("failed to check email")
+	}
+	if exists {
 		return dto.RegisterResponse{}, errors.New("email already exists")
 	}
 
@@ -38,18 +41,22 @@ func (u *UserServiceImpl) Register(registerRequest models.User) (dto.RegisterRes
 		return dto.RegisterResponse{}, errors.New("failed to hash password")
 	}
 
+	// Normalize email
+	registerRequest.Email = strings.TrimSpace(strings.ToLower(registerRequest.Email))
+
 	user := &models.User{
-		Email:     registerRequest.Email,
-		Password:  hashedPassword,
-		FirstName: registerRequest.FirstName,
-		LastName:  registerRequest.LastName,
+		Email:        registerRequest.Email,
+		Password:     hashedPassword,
+		FirstName:    registerRequest.FirstName,
+		LastName:     registerRequest.LastName,
+		ProfileImage: registerRequest.ProfileImage,
 	}
 
-	if err := u.userRepository.Register(user); err != nil {
-		return dto.RegisterResponse{}, errors.New("failed to register user")
+	if err := u.userRepository.Register(*user); err != nil {
+		return dto.RegisterResponse{}, fmt.Errorf("failed to register user: %v", err)
 	}
 
-	return *dto.ToUserResponse(user), nil
+	return dto.ToUserResponse(*user), nil
 }
 
 // Login implements UserService.
@@ -91,9 +98,9 @@ func (u *UserServiceImpl) UpdateProfile() {
 	panic("unimplemented")
 }
 
-func NewUserService(db *sql.DB, validate *validator.Validate) UserService {
+func NewUserService(db *sql.DB) UserService {
 	return &UserServiceImpl{
 		userRepository: repositories.NewUserRepository(db),
-		validate:       validate,
+		// validate:       validate,
 	}
 }

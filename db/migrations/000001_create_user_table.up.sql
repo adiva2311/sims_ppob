@@ -1,11 +1,11 @@
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
-    email VARCHAR(100) NOT NULL UNIQUE,
+    email VARCHAR(100) NOT NULL,
     password VARCHAR(255) NOT NULL,
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL,
     balance INT NOT NULL DEFAULT 0,
-    profile_image VARCHAR(255) NULL,
+    profile_image VARCHAR(255) NULL DEFAULT "./img/profile_image/default_user.png",
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     deleted_at TIMESTAMP NULL DEFAULT NULL

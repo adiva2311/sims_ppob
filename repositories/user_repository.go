@@ -2,11 +2,12 @@ package repositories
 
 import (
 	"database/sql"
+	"fmt"
 	"sims_ppob/models"
 )
 
 type UserRepository interface {
-	Register(user *models.User) error
+	Register(user models.User) error
 	CheckEmailValid(email string) (*models.User, error)
 	CheckEmailExists(email string) (bool, error)
 	GetProfile(user_id uint) (*models.User, error)
@@ -19,8 +20,8 @@ type UserRepositoryImpl struct {
 }
 
 // Register implements UserRepository.
-func (u *UserRepositoryImpl) Register(user *models.User) error {
-	query := "INSERT INTO users (email, password, first_name, last_name) VALUES (?, ?, ?, ?,)"
+func (u *UserRepositoryImpl) Register(user models.User) error {
+	query := "INSERT INTO users (email, password, first_name, last_name) VALUES (?, ?, ?, ?)"
 	result, err := u.DB.Exec(query, user.Email, user.Password, user.FirstName, user.LastName)
 	if err != nil {
 		return err
@@ -39,9 +40,10 @@ func (u *UserRepositoryImpl) Register(user *models.User) error {
 func (u *UserRepositoryImpl) CheckEmailExists(email string) (bool, error) {
 	var count int
 	query := "SELECT COUNT(*) FROM users WHERE email = ? AND deleted_at IS NULL"
-	result := u.DB.QueryRow(query, email).Scan(&count)
-	if result != nil {
-		return false, result
+	fmt.Println(u.DB.QueryRow(query, email).Scan(&count))
+	err := u.DB.QueryRow(query, email).Scan(&count)
+	if err != nil {
+		return false, err
 	}
 	return count > 0, nil
 }

@@ -9,3 +9,7 @@ type User struct {
 	Balance      int64  `json:"balance"`
 	ProfileImage string `json:"profile_image"`
 }
+
+func (User) TableName() string {
+	return "users"
+}
