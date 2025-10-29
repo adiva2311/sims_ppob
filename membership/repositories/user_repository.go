@@ -3,7 +3,7 @@ package repositories
 import (
 	"database/sql"
 	"fmt"
-	"sims_ppob/models"
+	"sims_ppob/membership/models"
 )
 
 type UserRepository interface {

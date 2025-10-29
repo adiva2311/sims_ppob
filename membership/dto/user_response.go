@@ -1,6 +1,6 @@
 package dto
 
-import "sims_ppob/models"
+import "sims_ppob/membership/models"
 
 type RegisterResponse struct {
 	Email        string `json:"email"`

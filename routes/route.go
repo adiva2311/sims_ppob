@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 	"sims_ppob/config"
-	"sims_ppob/controllers"
+	"sims_ppob/membership/controllers"
 	"sims_ppob/dto"
 	"sims_ppob/middlewares"
 
