@@ -10,9 +10,9 @@ type UserRepository interface {
 	Register(user models.User) error
 	CheckEmailValid(email string) (*models.User, error)
 	CheckEmailExists(email string) (bool, error)
-	GetProfile(user_id uint) (*models.User, error)
-	UpdateProfile(user_id uint, user *models.User) error
-	UpdateImage(user_id uint, user *models.User) error
+	GetProfile(email string) (*models.User, error)
+	UpdateProfile(email string, user *models.User) (*models.User, error)
+	UpdateImage(email string, user *models.User) (*models.User, error)
 }
 
 type UserRepositoryImpl struct {
@@ -21,8 +21,8 @@ type UserRepositoryImpl struct {
 
 // Register implements UserRepository.
 func (u *UserRepositoryImpl) Register(user models.User) error {
-	query := "INSERT INTO users (email, password, first_name, last_name) VALUES (?, ?, ?, ?)"
-	result, err := u.DB.Exec(query, user.Email, user.Password, user.FirstName, user.LastName)
+	query := "INSERT INTO users (email, password, first_name, last_name, profile_image) VALUES (?, ?, ?, ?, ?)"
+	result, err := u.DB.Exec(query, user.Email, user.Password, user.FirstName, user.LastName, user.ProfileImage)
 	if err != nil {
 		return err
 	}
@@ -51,33 +51,57 @@ func (u *UserRepositoryImpl) CheckEmailExists(email string) (bool, error) {
 // CheckEmailValid implements UserRepository.
 func (u *UserRepositoryImpl) CheckEmailValid(email string) (*models.User, error) {
 	var user models.User
-	query := "SELECT email FROM users WHERE email = ? AND deleted_at IS NULL"
-	result := u.DB.QueryRow(query, email).Scan(&user.Email)
-	if result != nil {
-		return nil, result
+	query := "SELECT email, password FROM users WHERE email = ? AND deleted_at IS NULL"
+	err := u.DB.QueryRow(query, email).Scan(&user.Email, &user.Password)
+	if err != nil {
+		return nil, err
 	}
 	return &user, nil
 }
 
 // GetProfile implements UserRepository.
-func (u *UserRepositoryImpl) GetProfile(user_id uint) (*models.User, error) {
-	query := "SELECT id, email, first_name, last_name, profile_image FROM users WHERE id = ? AND deleted_at IS NULL"
+func (u *UserRepositoryImpl) GetProfile(email string) (*models.User, error) {
 	var user models.User
-	result := u.DB.QueryRow(query, user_id).Scan(&user.ID, &user.Email, &user.FirstName, &user.LastName, &user.ProfileImage)
-	if result != nil {
-		return nil, result
+	query := "SELECT email, first_name, last_name, profile_image FROM users WHERE email = ? AND deleted_at IS NULL"
+	err := u.DB.QueryRow(query, email).Scan(&user.Email, &user.FirstName, &user.LastName, &user.ProfileImage)
+	if err != nil {
+		return nil, err
 	}
 	return &user, nil
 }
 
 // UpdateImage implements UserRepository.
-func (u *UserRepositoryImpl) UpdateImage(user_id uint, user *models.User) error {
-	panic("unimplemented")
+func (u *UserRepositoryImpl) UpdateImage(email string, user *models.User) (*models.User, error) {
+	query := "UPDATE users SET profile_image = ? WHERE email = ? AND deleted_at IS NULL"
+	result, err := u.DB.Exec(query, user.ProfileImage, email)
+	if err != nil {
+		return nil, err
+	}
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return nil, err
+	}
+	if rowsAffected == 0 {
+		return user, nil
+	}
+	return user, nil
 }
 
 // UpdateProfile implements UserRepository.
-func (u *UserRepositoryImpl) UpdateProfile(user_id uint, user *models.User) error {
-	panic("unimplemented")
+func (u *UserRepositoryImpl) UpdateProfile(email string, user *models.User) (*models.User, error) {
+	query := "UPDATE users SET first_name = ?, last_name = ? WHERE email = ? AND deleted_at IS NULL"
+	result, err := u.DB.Exec(query, user.FirstName, user.LastName, email)
+	if err != nil {
+		return nil, err
+	}
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return nil, err
+	}
+	if rowsAffected == 0 {
+		return user, nil
+	}
+	return user, nil
 }
 
 func NewUserRepository(db *sql.DB) UserRepository {

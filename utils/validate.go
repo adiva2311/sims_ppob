@@ -19,15 +19,15 @@ func ValidateStruct(data interface{}) map[string]string {
 		field := err.Field()
 		switch err.Tag() {
 		case "required":
-			errors[field] = fmt.Sprintf("%s is required", field)
+			errors[field] = fmt.Sprintf("%s tidak boleh kosong, harus diisi", field)
 		case "email":
-			errors[field] = "invalid email format"
+			errors[field] = "Parameter email tidak sesuai format"
 		case "min":
-			errors[field] = fmt.Sprintf("%s must be at least %s characters", field, err.Param())
+			errors[field] = fmt.Sprintf("%s minimal harus %s karakter", field, err.Param())
 		case "number":
-			errors[field] = fmt.Sprintf("%s must be a number", field)
+			errors[field] = fmt.Sprintf("%s harus diisi dengan angka", field)
 		default:
-			errors[field] = fmt.Sprintf("%s is invalid", field)
+			errors[field] = fmt.Sprintf("%s tidak valid", field)
 		}
 	}
 	return errors

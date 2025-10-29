@@ -6,6 +6,7 @@ import (
 	"sims_ppob/config"
 	"sims_ppob/controllers"
 	"sims_ppob/dto"
+	"sims_ppob/middlewares"
 
 	"github.com/labstack/echo/v4"
 )
@@ -28,10 +29,10 @@ func ApiRoutes(e *echo.Echo) {
 	// USER ROUTES
 	UserController := controllers.NewUserController(db)
 	e.POST("/registration", UserController.Register)
-	// e.POST("/login", UserController.Login)
-	// e.GET("/profile", UserController.Logout, middlewares.JWTMiddleware)
-	// e.PUT("/profile/update", UserController.UpdateUser, middlewares.JWTMiddleware)
-	// e.PUT("/profile/image", UserController.UpdateUser, middlewares.JWTMiddleware)
+	e.POST("/login", UserController.Login)
+	e.GET("/profile", UserController.GetProfile, middlewares.JWTMiddleware)
+	e.PUT("/profile/update", UserController.UpdateProfile, middlewares.JWTMiddleware)
+	e.PUT("/profile/image", UserController.UpdateImage, middlewares.JWTMiddleware)
 
 	// INFORMATION ROUTES
 	// e.GET("/banner", UserController.RefreshToken)

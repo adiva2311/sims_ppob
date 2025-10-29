@@ -27,3 +27,19 @@ func ToLoginResponse(token string) *LoginResponse {
 		Token: token,
 	}
 }
+
+type UserProfileResponse struct {
+	Email        string `json:"email"`
+	FirstName    string `json:"first_name"`
+	LastName     string `json:"last_name"`
+	ProfileImage string `json:"profile_image"`
+}
+
+func ToUserProfileResponse(user models.User) *UserProfileResponse {
+	return &UserProfileResponse{
+		Email:        user.Email,
+		FirstName:    user.FirstName,
+		LastName:     user.LastName,
+		ProfileImage: user.ProfileImage,
+	}
+}

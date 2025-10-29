@@ -14,9 +14,9 @@ import (
 type UserService interface {
 	Register(registerRequest models.User) (dto.RegisterResponse, error)
 	Login(loginRequest dto.LoginRequest) (dto.LoginResponse, error)
-	GetProfile()
-	UpdateProfile()
-	UpdateImage()
+	GetProfile(email string) (dto.UserProfileResponse, error)
+	UpdateProfile(email string, updateProfileRequest models.User) (dto.UserProfileResponse, error)
+	UpdateImage(email string, updateImageRequest models.User) (dto.UserProfileResponse, error)
 }
 
 type UserServiceImpl struct {
@@ -73,34 +73,60 @@ func (u *UserServiceImpl) Login(loginRequest dto.LoginRequest) (dto.LoginRespons
 	}
 
 	// Generate JWT token
-	// accessToken, err := utils.GenerateJWT(user.ID, user.Email, user.Role)
-	// if err != nil {
-	// 	return dto.LoginResponse{}, err
-	// }
+	jwtToken, err := utils.GenerateJWT(user.Email)
+	if err != nil {
+		return dto.LoginResponse{}, err
+	}
 
-	accessToken := "dummy_token" // Placeholder for JWT token generation
-
-	return *dto.ToLoginResponse(accessToken), nil
+	return *dto.ToLoginResponse(jwtToken), nil
 }
 
 // GetProfile implements UserService.
-func (u *UserServiceImpl) GetProfile() {
-	panic("unimplemented")
-}
+func (u *UserServiceImpl) GetProfile(email string) (dto.UserProfileResponse, error) {
+	// Fetch user profile from repository
+	userProfile, err := u.userRepository.GetProfile(email)
+	if err != nil {
+		return dto.UserProfileResponse{}, err
+	}
 
-// UpdateImage implements UserService.
-func (u *UserServiceImpl) UpdateImage() {
-	panic("unimplemented")
+	return *dto.ToUserProfileResponse(*userProfile), nil
 }
 
 // UpdateProfile implements UserService.
-func (u *UserServiceImpl) UpdateProfile() {
-	panic("unimplemented")
+func (u *UserServiceImpl) UpdateProfile(email string, updateProfileRequest models.User) (dto.UserProfileResponse, error) {
+	user := &models.User{
+		FirstName: updateProfileRequest.FirstName,
+		LastName:  updateProfileRequest.LastName,
+	}
+
+	_, err := u.userRepository.UpdateProfile(email, user)
+	if err != nil {
+		return dto.UserProfileResponse{}, err
+	}
+
+	userProfile, _ := u.userRepository.GetProfile(email)
+
+	return *dto.ToUserProfileResponse(*userProfile), nil
+}
+
+// UpdateImage implements UserService.
+func (u *UserServiceImpl) UpdateImage(email string, updateImageRequest models.User) (dto.UserProfileResponse, error) {
+	user := &models.User{
+		ProfileImage: updateImageRequest.ProfileImage,
+	}
+
+	_, err := u.userRepository.UpdateImage(email, user)
+	if err != nil {
+		return dto.UserProfileResponse{}, err
+	}
+
+	userProfile, _ := u.userRepository.GetProfile(email)
+
+	return *dto.ToUserProfileResponse(*userProfile), nil
 }
 
 func NewUserService(db *sql.DB) UserService {
 	return &UserServiceImpl{
 		userRepository: repositories.NewUserRepository(db),
-		// validate:       validate,
 	}
 }
