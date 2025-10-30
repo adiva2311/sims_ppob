@@ -1,6 +1,6 @@
 package dto
 
-import "sims_ppob/information/models"
+import "sims_ppob/models"
 
 type ServiceResponse struct {
 	ServiceCode   string `json:"service_code"`
@@ -9,7 +9,7 @@ type ServiceResponse struct {
 	ServiceTariff int64  `json:"service_tariff"`
 }
 
-func ToserviceResponse(services []models.Services) []ServiceResponse {
+func ToServiceResponse(services []models.Services) []ServiceResponse {
 	var response []ServiceResponse
 	for _, service := range services {
 		response = append(response, ServiceResponse{

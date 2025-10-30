@@ -1,6 +1,6 @@
 package dto
 
-import "sims_ppob/information/models"
+import "sims_ppob/models"
 
 type BannerResponse struct {
 	BannerName  string `json:"banner_name"`

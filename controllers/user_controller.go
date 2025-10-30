@@ -8,9 +8,8 @@ import (
 	"os"
 	"path/filepath"
 	"sims_ppob/dto"
-	req "sims_ppob/membership/dto"
-	"sims_ppob/membership/models"
-	"sims_ppob/membership/services"
+	"sims_ppob/models"
+	"sims_ppob/services"
 	"sims_ppob/utils"
 
 	"github.com/labstack/echo/v4"
@@ -73,7 +72,7 @@ func (u *UserControllerImpl) Register(c echo.Context) error {
 
 // Login implements UserController.
 func (u *UserControllerImpl) Login(c echo.Context) error {
-	userPayload := new(req.LoginRequest)
+	userPayload := new(dto.LoginRequest)
 	if err := c.Bind(userPayload); err != nil {
 		return err
 	}
@@ -87,7 +86,7 @@ func (u *UserControllerImpl) Login(c echo.Context) error {
 		})
 	}
 
-	result, err := u.UserService.Login(req.LoginRequest{
+	result, err := u.UserService.Login(dto.LoginRequest{
 		Email:    userPayload.Email,
 		Password: userPayload.Password,
 	})
@@ -138,7 +137,7 @@ func (u *UserControllerImpl) UpdateProfile(c echo.Context) error {
 		return c.JSON(http.StatusUnauthorized, "Unauthorized")
 	}
 
-	userPayload := new(req.UpdateProfileRequest)
+	userPayload := new(dto.UpdateProfileRequest)
 	if err := c.Bind(userPayload); err != nil {
 		return err
 	}

@@ -4,9 +4,9 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"sims_ppob/membership/dto"
-	"sims_ppob/membership/models"
-	"sims_ppob/membership/repositories"
+	"sims_ppob/dto"
+	"sims_ppob/models"
+	"sims_ppob/repositories"
 	"sims_ppob/utils"
 	"strings"
 )
