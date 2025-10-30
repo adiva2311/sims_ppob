@@ -12,7 +12,17 @@ func ToBalanceResponse(user models.User) BalanceResponse {
 	}
 }
 
-type TransactionResponse struct {
+type TopUpResponse struct {
+	Balance int64 `json:"balance"`
+}
+
+func ToTopUpResponse(user models.User) TopUpResponse {
+	return TopUpResponse{
+		Balance: user.Balance,
+	}
+}
+
+type PaymentResponse struct {
 	InvoiceNumber   string `json:"invoice_number"`
 	ServiceCode     string `json:"service_code"`
 	ServiceName     string `json:"service_name"`
@@ -21,8 +31,8 @@ type TransactionResponse struct {
 	CreatedAt       string `json:"created_at"`
 }
 
-func ToTransactionResponse(service models.Services, transaction models.Transaction) TransactionResponse {
-	return TransactionResponse{
+func ToPaymentResponse(service models.Services, transaction models.Transaction) PaymentResponse {
+	return PaymentResponse{
 		InvoiceNumber:   transaction.InvoiceNumber,
 		ServiceCode:     service.ServiceCode,
 		ServiceName:     service.ServiceName,
@@ -32,7 +42,7 @@ func ToTransactionResponse(service models.Services, transaction models.Transacti
 	}
 }
 
-type TransactionHistoryResponse struct {
+type PaymentHistoryResponse struct {
 	InvoiceNumber   string `json:"invoice_number"`
 	TransactionType string `json:"transaction_type"`
 	Description     string `json:"description"`
@@ -40,10 +50,10 @@ type TransactionHistoryResponse struct {
 	CreatedAt       string `json:"created_at"`
 }
 
-func ToTransactionHistoryResponse(transactions []models.Transaction) []TransactionHistoryResponse {
-	var response []TransactionHistoryResponse
+func ToTransactionHistoryResponse(transactions []PaymentHistoryResponse) []PaymentHistoryResponse {
+	var response []PaymentHistoryResponse
 	for _, transaction := range transactions {
-		response = append(response, TransactionHistoryResponse{
+		response = append(response, PaymentHistoryResponse{
 			InvoiceNumber:   transaction.InvoiceNumber,
 			TransactionType: transaction.TransactionType,
 			Description:     transaction.Description,

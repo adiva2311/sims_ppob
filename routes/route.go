@@ -42,7 +42,7 @@ func ApiRoutes(e *echo.Echo) {
 	// TRANSACTION ROUTES
 	TransactionController := controllers.NewTransactionController(db)
 	e.GET("/balance", TransactionController.Balance, middlewares.JWTMiddleware)
-	// e.POST("/topup", UserController.RefreshToken, middlewares.JWTMiddleware)
-	// e.POST("/transaction", UserController.RefreshToken, middlewares.JWTMiddleware)
-	// e.GET("/transaction/history", UserController.RefreshToken, middlewares.JWTMiddleware)
+	e.POST("/topup", TransactionController.TopUp, middlewares.JWTMiddleware)
+	e.POST("/transaction", TransactionController.Payment, middlewares.JWTMiddleware)
+	e.GET("/transaction/history", TransactionController.PaymentHistory, middlewares.JWTMiddleware)
 }

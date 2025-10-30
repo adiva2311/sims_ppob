@@ -5,10 +5,9 @@ type BalanceRequest struct {
 }
 
 type TopUpRequest struct {
-	TransactionType string `json:"transaction_type"`
-	TopUpAmount     int64  `json:"top_up_amount"`
+	TopUpAmount int64 `json:"top_up_amount" validate:"required,gt=0"`
 }
 
 type PaymentRequest struct {
-	ServiceCode string `json:"service_code"`
+	ServiceCode string `json:"service_code" validate:"required"`
 }

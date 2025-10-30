@@ -1,10 +1,11 @@
 CREATE TABLE transactions (
-    invoice_number SERIAL PRIMARY KEY,
-    user_id INT NOT NULL,
-    service_id INT NOT NULL,
+    invoice_number VARCHAR(50) PRIMARY KEY,
+    user_id BIGINT UNSIGNED NOT NULL,
+	service_id BIGINT UNSIGNED NULL,
     total_amount DECIMAL(15,0) NOT NULL,
     transaction_type VARCHAR(50) NOT NULL DEFAULT 'PAYMENT',
-    created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    description TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (service_id) REFERENCES services(id)
-)Engine=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

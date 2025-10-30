@@ -26,7 +26,7 @@ func ValidateStruct(data interface{}) map[string]string {
 			errors[field] = fmt.Sprintf("%s minimal harus %s karakter", field, err.Param())
 		case "number":
 			errors[field] = fmt.Sprintf("%s harus diisi dengan angka", field)
-		case "gte":
+		case "gt":
 			errors[field] = fmt.Sprintf("%s harus lebih besar dari %s", field, err.Param())
 		default:
 			errors[field] = fmt.Sprintf("%s tidak valid", field)

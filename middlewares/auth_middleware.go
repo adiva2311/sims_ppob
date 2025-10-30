@@ -51,15 +51,26 @@ func JWTMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
 			})
 		}
 
+		userIDFloat, ok := claims["id"].(float64)
+		if !ok {
+			return c.JSON(http.StatusUnauthorized, dto.ApiResponse{
+				Status:  http.StatusUnauthorized,
+				Message: "user_id tidak ditemukan dalam token",
+				Data:    nil,
+			})
+		}
+		userID := int64(userIDFloat)
+
 		email, ok := claims["email"].(string)
 		if !ok {
 			return c.JSON(http.StatusUnauthorized, dto.ApiResponse{
 				Status:  http.StatusUnauthorized,
-				Message: "Klaim email tidak ditemukan dalam token",
+				Message: "email tidak ditemukan dalam token",
 				Data:    nil,
 			})
 		}
 
+		c.Set("id", userID)
 		c.Set("userEmail", email)
 
 		// Kirim request ke handler berikutnya

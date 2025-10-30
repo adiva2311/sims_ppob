@@ -10,13 +10,15 @@ import (
 var secretKey = []byte(os.Getenv("JWT_SECRET_KEY"))
 
 type JwtCustomClaims struct {
+	ID    uint   `json:"id"`
 	Email string `json:"email"`
 	jwt.RegisteredClaims
 }
 
-func GenerateJWT(email string) (string, error) {
+func GenerateJWT(id int64, email string) (string, error) {
 	// Set custom claims
 	customClaims := &JwtCustomClaims{
+		ID:    uint(id),
 		Email: email,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(12 * time.Hour)), // Token expires in 12 hours

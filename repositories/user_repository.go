@@ -51,8 +51,8 @@ func (u *UserRepositoryImpl) CheckEmailExists(email string) (bool, error) {
 // CheckEmailValid implements UserRepository.
 func (u *UserRepositoryImpl) CheckEmailValid(email string) (*models.User, error) {
 	var user models.User
-	query := "SELECT email, password FROM users WHERE email = ? AND deleted_at IS NULL"
-	err := u.DB.QueryRow(query, email).Scan(&user.Email, &user.Password)
+	query := "SELECT id, email, password FROM users WHERE email = ? AND deleted_at IS NULL"
+	err := u.DB.QueryRow(query, email).Scan(&user.ID, &user.Email, &user.Password)
 	if err != nil {
 		return nil, err
 	}

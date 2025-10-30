@@ -73,7 +73,7 @@ func (u *UserServiceImpl) Login(loginRequest dto.LoginRequest) (dto.LoginRespons
 	}
 
 	// Generate JWT token
-	jwtToken, err := utils.GenerateJWT(user.Email)
+	jwtToken, err := utils.GenerateJWT(int64(user.ID), user.Email)
 	if err != nil {
 		return dto.LoginResponse{}, err
 	}
