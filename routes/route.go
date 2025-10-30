@@ -40,7 +40,8 @@ func ApiRoutes(e *echo.Echo) {
 	e.GET("/services", InfoController.FindAllServices, middlewares.JWTMiddleware)
 
 	// TRANSACTION ROUTES
-	// e.GET("/balance", UserController.RefreshToken, middlewares.JWTMiddleware)
+	TransactionController := controllers.NewTransactionController(db)
+	e.GET("/balance", TransactionController.Balance, middlewares.JWTMiddleware)
 	// e.POST("/topup", UserController.RefreshToken, middlewares.JWTMiddleware)
 	// e.POST("/transaction", UserController.RefreshToken, middlewares.JWTMiddleware)
 	// e.GET("/transaction/history", UserController.RefreshToken, middlewares.JWTMiddleware)
