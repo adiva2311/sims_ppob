@@ -17,6 +17,15 @@ func ApiRoutes(e *echo.Echo) {
 		log.Fatal("Failed Connect to Database")
 	}
 
+	e.GET("/", func(c echo.Context) error {
+		apiResponse := dto.ApiResponse{
+			Status:  http.StatusOK,
+			Message: `==== SIMS_PPOB System API ==== By : Adiva Nursuandy Ritonga`,
+		}
+
+		return c.JSON(http.StatusOK, apiResponse)
+	})
+
 	e.GET("/health", func(c echo.Context) error {
 		apiResponse := dto.ApiResponse{
 			Status:  http.StatusOK,
