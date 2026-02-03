@@ -179,14 +179,14 @@ func storeImage(c echo.Context, email string) (string, error) {
 	if err := c.Request().ParseMultipartForm(2 << 20); err != nil {
 		return "", err
 	}
-	defer c.Request().MultipartForm.RemoveAll()
+	defer c.Request().MultipartForm.RemoveAll() // Clean up temporary files
 
 	// Get file from FORM
 	file, err := c.FormFile("file")
 	if err != nil {
 		return "", err
 	}
-	if file.Size > 2*1024*1024 {
+	if file.Size > 2*1024*1024 { // 2MB limit
 		return "", fmt.Errorf("file size exceeds 2MB limit")
 	}
 
