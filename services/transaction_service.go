@@ -30,7 +30,7 @@ func (t *TransactionServiceImpl) Balance(email string) (dto.BalanceResponse, err
 
 // TopUp implements TransactionService.
 func (t *TransactionServiceImpl) TopUp(email string, user_id int, topUpAmount models.Transaction) (int64, error) {
-	log.Println("🔹 Repository.TopUp dipanggil")
+	log.Println("Repository.TopUp dipanggil")
 	topUp, err := t.TransactionRepository.TopUp(email, user_id, &topUpAmount)
 	if err != nil {
 		return 0, err
@@ -40,7 +40,7 @@ func (t *TransactionServiceImpl) TopUp(email string, user_id int, topUpAmount mo
 
 // Payment implements TransactionService.
 func (t *TransactionServiceImpl) Payment(email string, user_id int, serviceCode string, payment *models.Transaction) (*dto.PaymentResponse, error) {
-	log.Println("🔹 Repository.Payment dipanggil")
+	log.Println("Repository.Payment dipanggil")
 	paymentResult, err := t.TransactionRepository.Payment(email, user_id, serviceCode, payment)
 	if err != nil {
 		return nil, err
@@ -50,7 +50,7 @@ func (t *TransactionServiceImpl) Payment(email string, user_id int, serviceCode 
 
 // PaymentHistory implements TransactionService.
 func (t *TransactionServiceImpl) PaymentHistory(email string, limit, offset int) ([]dto.PaymentHistoryResponse, error) {
-	log.Println("🔹 Repository.Payment History dipanggil")
+	log.Println("Repository.Payment History dipanggil")
 	paymentHistory, err := t.TransactionRepository.PaymentHistory(email, limit, offset)
 	if err != nil {
 		return nil, err
