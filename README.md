@@ -118,7 +118,7 @@ SIMS_PPOB/
 
 Aplikasi ini telah dideploy ke Railway dan dapat diakses melalui:
 
-https://simsppob-production-177e.up.railway.app/
+https://sims-ppob.gajahbumi.web.id/
 
 ---
 
